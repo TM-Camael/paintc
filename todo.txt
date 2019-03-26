@@ -1,0 +1,5 @@
+TODO
+
+Finir implémenter liste chaîne (insertion dans amodifier.c + éventuellement test de valeurs)
+Finir implémenter 2x clic = figure possible (cercle, les pleins, droite, point)
+IF 8 : PURGE THE FIGURES

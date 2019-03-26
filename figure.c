@@ -1,40 +1,40 @@
+#include <math.h>
 #include "figure.h"
 
 void afficher_texte(int x_centre, int y_centre, char *string, double r, double v, double b){
-  glColor4f(r,v,b,1.0);
-  texte(x_centre, y_centre, string);
+	glColor4f(r,v,b,1.0);
+	texte(x_centre, y_centre, string);
 }
 
 void afficher_point(int x_centre, int y_centre, double r, double v, double b)
 {
-  /* r, v et b sont trois reels entre 0 et 1 correspondant aux trois composantes rouge, vert et bleu de la couleur*/
-  glColor4f(r,v,b,1.0);
-  glBegin(GL_POINTS);
-  glVertex2i(x_centre,y_centre);
-  glEnd();
+	/* r, v et b sont trois reels entre 0 et 1 correspondant aux trois composantes rouge, vert et bleu de la couleur*/
+	glColor4f(r,v,b,1.0);
+	glBegin(GL_POINTS);
+	glVertex2i(x_centre,y_centre);
+	glEnd();
 }
 
-void afficher_cercle()
+int afficher_cercle(int x1, int x2, int y1, int y2)
 {
-  int x_centre, y_centre;
-  int m; 
+	int x = 0;
+	int m;
+	double temp = (x2-x1)*(x2-x1)+(y1-y2)*(y1-y2);
+	y=sqrt(temp);
+	printf("%d %d %lf %d",x1, y1, temp, y);
+	
+	m= 5 - 4*y;
 
-  printf("Donnez les coordonnées du centre :\n");
-  scanf(" %d %d", &x_centre, &y_centre);
-  printf("Donnez le rayon :\n");
-  scanf(" %d", &y); 
-  m= 5 - 4*y;
-
-  while(x<=y)
-  {
-	afficher_point((x+x_centre), (y+y_centre), 0, 0, 0);
-	afficher_point((y+x_centre), (x+y_centre), 0, 0, 0);
-	afficher_point((-x+x_centre), (y+y_centre), 0, 0, 0);
-	afficher_point((-y+x_centre), (x+y_centre), 0, 0, 0);
-	afficher_point((x+x_centre), (-y+y_centre), 0, 0, 0);
-	afficher_point((y+x_centre), (-x+y_centre), 0, 0, 0);
-	afficher_point((-x+x_centre), (-y+y_centre), 0, 0, 0);
-	afficher_point((-y+x_centre), (-x+y_centre), 0, 0, 0);
+	while(x<=y)
+	{
+	afficher_point((x+x1), (TAILLE_Y-(y+y1)), 0, 0, 0);
+	afficher_point((y+x1), (TAILLE_Y-(x+y1)), 0, 0, 0);
+	afficher_point((-x+x1), (TAILLE_Y-(y+y1)), 0, 0, 0);
+	afficher_point((-y+x1), (TAILLE_Y-(x+y1)), 0, 0, 0);
+	afficher_point((x+x1), (TAILLE_Y-(-y+y1)), 0, 0, 0);
+	afficher_point((y+x1), (TAILLE_Y-(-x+y1)), 0, 0, 0);
+	afficher_point((-x+x1), (TAILLE_Y-(-y+y1)), 0, 0, 0);
+	afficher_point((-y+x1), (TAILLE_Y-(-x+y1)), 0, 0, 0);
 	if(m>0) 
 	{
 		y--;
@@ -42,207 +42,209 @@ void afficher_cercle()
 	}
 	x++;
 	m+=8*x+4;
-  }
+	}
+	return y;
 }
 
-void afficher_cercle_plein()
+int afficher_cercle_plein(int x1, int x2, int y1, int y2)
 {
-  int x_centre, y_centre;
-  int x, y, r;
-
-
-  printf("Donnez les coordonnées du centre :\n");
-  scanf(" %d %d", &x_centre, &y_centre);
-  printf("Donnez le rayon :\n");
-  scanf(" %d", &r); 
+	int x, y, r;
+	double temp = (x2-x1)*(x2-x1)+(y1-y2)*(y1-y2);
+	r=sqrt(temp);
 	
 	for(y=-r; y<=r; y++)
 	{
-	    for(x=-r; x<=r; x++)
-	    {
-		if(x*x+y*y <= r*r)
-		{
-		    afficher_point(x_centre+x, y_centre+y, 0, 0, 0);
+		for(x=-r; x<=r; x++) {
+			if(x*x+y*y <= r*r)
+			{
+				afficher_point(x1+x, (TAILLE_Y-y1+y), 0, 0, 0);
+			}
 		}
-	    }
-        }
+	}
+	return r;
 }
 		
-
 void afficher_rectangle(int x1, int x2, int y1, int y2)
 {
-  int longueur;
-  int largeur;
-  int i;
+	int longueur;
+	int largeur;
+	int i;
 
-  longueur = x2-x1;
-  largeur = y1-y2;
+	longueur = abs(x2-x1);
+	largeur = abs(y2-y1);
 
-  for(i=0; i<=longueur; i++)
-  {
-    afficher_point((x1+i), y1, 0, 0, 0);
-    afficher_point((x1+i), y2, 0, 0, 0);
-  }
+	for(i=0; i<=longueur; i++)
+	{
+		afficher_point(x1+i, (TAILLE_Y-y1), 0, 0, 0);
+		afficher_point(x1+i, (TAILLE_Y-(y1+largeur)), 0, 0, 0);
+	}
 
-  for(i=0; i<=largeur; i++)
-  {
-    afficher_point((x1), (y2+i), 0, 0, 0);
-    afficher_point((x2), (y2+i), 0, 0, 0);
-  }
+	for(i=0; i<=largeur; i++)
+	{
+		afficher_point(x1, (TAILLE_Y-(y1+i)), 0, 0, 0);
+		afficher_point(x1+longueur, (TAILLE_Y-(y1+i)), 0, 0, 0);
+	}
 }
 
-void afficher_rectangle_plein() {
+void afficher_rectangle_plein(int x1, int x2, int y1, int y2) {
+	int longueur;
+	int largeur;
+	int i, j;
 
-  int x_centre, y_centre, x, y;
-  int longueur;
-  int largeur;
-  int i,j;
+	longueur = abs(x2-x1);
+	largeur = abs(y2-y1);
 
-  printf("Donnez les coordonnées du centre :\n");
-  scanf(" %d %d", &x_centre, &y_centre);
-  printf("Donnez la longueur :\n");
-  scanf(" %d", &longueur); 
-  printf("Donnez la largeur :\n");
-  scanf(" %d", &largeur); 
-
-  for(j=0; j<=largeur; j++){
-	  for(i=0; i<=longueur; i++)
-	  {
-	    afficher_point((x_centre+i), y_centre+j, 0, 0, 0);
-	  }
-  }
+	for(j=0; j<=largeur; j++){
+		for(i=0; i<=longueur; i++)
+		{
+			afficher_point((x1+i), (TAILLE_Y-(y1+j)), 0, 0, 0);
+		}
+	}
 }
 
+int afficher_droite(int x1, int x2, int y1, int y2) {
 
-void afficher_droite() {
+	double temp = (TAILLE_Y-y1-y2)/(x2-x1);
+	int a = (int)temp;
+	int b = y1-a*x1;
+	
+	x1=0;
+	y1=b;
+	x2=TAILLE_X+1;
+	y2=x2*temp+b;
+
+	int dx = abs(x2-x1), sx = x1<x2 ? 1 : -1;
+	int dy = abs(y2-y1), sy = y1<y2 ? 1 : -1; 
+	int err = (dx>dy ? dx : -dy)/2, e2;
  
-  int x1, x2, y1, y2, a, b;
-
-  printf("Donnez le coefficient directeur :\n");
-  scanf(" %d", &a);
-  printf("Donnez l'ordonnée à l'origine :\n");
-  scanf(" %d", &b);
-  
-  x1=0;
-  y1=b;
-  x2=1000;
-  y2=1000*a+b;
-
-  int dx = abs(x2-x1), sx = x1<x2 ? 1 : -1;
-  int dy = abs(y2-y1), sy = y1<y2 ? 1 : -1; 
-  int err = (dx>dy ? dx : -dy)/2, e2;
- 
-  for(;;){
-    afficher_point(x1, y1, 0, 0, 0);
-    if (x1==x2 && y1==y2) break;
-    e2 = err;
-    if (e2 >-dx) { err -= dy; x1 += sx; }
-    if (e2 < dy) { err += dx; y1 += sy; }
-  }
+	for(;;){
+		afficher_point(x1, y1, 0, 0, 0);
+		if (x1==x2 && y1==y2) break;
+		e2 = err;
+		if (e2 >-dx) { err -= dy; x1 += sx; }
+		if (e2 < dy) { err += dx; y1 += sy; }
+	}
+	return a;
 }
 
-struct nodeListe {
-   int indice;
-   int x_origine;
-   int y_origine;
-   int composant1;
-   int composant2; 
-   int plein;
-   struct nodeListe *next;
+/****************************************************************************************************************************/
+/****************************************************************************************************************************/
+/****************************************************************************************************************************/
+
+/* Liste chaînéee */ 
+struct noeudListe {
+	int type; /* Compris entre 1 et 4, respectivement Point, Droite, Carré, Cercle */
+	int x_origine; 
+	int y_origine;
+	int composant1; /* Fait référence au coefficiant directeur d'une droite, ou de la longueur d'un rectangle, ou du rayon d'un cercle */
+	int composant2; /* Fait référence à l'ordonnée à l'origine d'une droite, ou de la largeur d'un rectangle */
+	int plein;
+	struct noeudListe *suivant;
 };
 
-struct nodeListe *head = NULL;
+struct noeudListe *tete = NULL;
 
-struct nodeListe* deleteFirst() {
+struct noeudListe* deleteFirst() {
 
-   struct nodeListe *tempLink = head;
+	struct noeudListe *tempLien = tete;
 
-   head = head->next;
+	tete = tete->suivant;
 
-   return tempLink;
+	return tempLien;
 }
 
-struct nodeListeBackup {
-   int indice;
-   int x_origine;
-   int y_origine;
-   int composant1;
-   int composant2; 
-   int plein;
-   struct nodeListeBackup *next;
+struct noeudListeBackup {
+	int type;
+	int x_origine;
+	int y_origine;
+	int composant1;
+	int composant2; 
+	int plein;
+	struct noeudListeBackup *suivant;
 };
 
-struct nodeListeBackup *headBackup = NULL;
+struct noeudListeBackup *teteBackup = NULL;
 
-struct nodeListeBackup* deleteFirstBackup() {
+struct noeudListeBackup* deleteFirstBackup() {
 
-   struct nodeListeBackup *tempLink = headBackup;
+	struct noeudListeBackup *tempLien = teteBackup;
 	
-   headBackup = headBackup->next;
+	teteBackup = teteBackup->suivant;
 	
-   return tempLink;
+	return tempLien;
 }
-
-
 
 void afficherListe() {
-   struct nodeListe *ptr = head;
-   printf("\n[ ");
+	struct noeudListe *ptr = tete;
 	
-   while(ptr != NULL) {
-      printf("(%d,%d,%d,%d,%d,%d) ",ptr->indice,ptr->x_origine,ptr->y_origine,ptr->composant1,ptr->composant2,ptr->plein);
-      ptr = ptr->next;
-   }
-	
-   printf(" ]\n");
+	while(ptr != NULL) {
+		switch (ptr->type)
+		{
+			case 0:
+				printf("Point -\n(%d,%d)\n\n",ptr->x_origine,ptr->y_origine);
+				break;
+		
+			case 1:
+				printf("Droite :\ncoeffDirec : %d\nordOrigine : %d\n\n",ptr->composant1,ptr->composant2);
+				break;
+			
+			case 2: 
+				printf("Rectangle -\nOrigine : (%d,%d)\nLongueur : %d\nLargeur : %d\nPlein : %d\n\n",ptr->x_origine,ptr->y_origine,ptr->composant1,ptr->composant2,ptr->plein);
+				break;
+			
+			case 3: 
+				printf("Cercle -\nCentre : (%d,%d)\nRayon : %d\nPlein : %d\n\n",ptr->x_origine,ptr->y_origine,ptr->composant1,ptr->plein);
+				break;
+
+			default:
+				break;
+		}
+		ptr=ptr->suivant;
+	}
 }
 
 
-void inserer(int indice, int x_origine, int y_origine, int composant1, int composant2, int plein) {
+void inserer(int type, int x_origine, int y_origine, int composant1, int composant2, int plein) {
 
-   struct nodeListe *link = (struct nodeListe*) malloc(sizeof(struct nodeListe));
+	struct noeudListe *lien = (struct noeudListe*) malloc(sizeof(struct noeudListe));
 	
-   link->indice = indice;
-   link->x_origine = x_origine;
-   link->y_origine = y_origine;
-   link->composant1 = composant1;
-   link->composant2 = composant2;
-   link->plein = plein;
-	
-
-   link->next = head;
-	
-
-   head = link;
+	lien->type = type;
+	lien->x_origine = x_origine;
+	lien->y_origine = y_origine;
+	lien->composant1 = composant1;
+	lien->composant2 = composant2;
+	lien->plein = plein;
+	lien->suivant = tete;
+	tete = lien;
 }
 
-void supprimer() {
+void supprimerLien() {
 
-   struct nodeListe *linkTemp = deleteFirst();
-   struct nodeListeBackup *link = (struct nodeListeBackup*) malloc(sizeof(struct nodeListeBackup));
+	struct noeudListe *lienTemp = deleteFirst();
+	struct noeudListeBackup *lien = (struct noeudListeBackup*) malloc(sizeof(struct noeudListeBackup));
 	
-   link->indice = linkTemp->indice;
-   link->x_origine = linkTemp->x_origine;
-   link->y_origine = linkTemp->y_origine;
-   link->composant1 = linkTemp->composant1;
-   link->composant2 = linkTemp->composant2;
-   link->plein = linkTemp->plein;
+	lien->type = lienTemp->type;
+	lien->x_origine = lienTemp->x_origine;
+	lien->y_origine = lienTemp->y_origine;
+	lien->composant1 = lienTemp->composant1;
+	lien->composant2 = lienTemp->composant2;
+	lien->plein = lienTemp->plein;
+	lien->suivant = teteBackup;
+	teteBackup = lien;
+}
 
-   link->next = headBackup;
-	
+void supprimerFigure() {
+	effacer();
+	struct noeudListe *ptrSF = tete;
+	while(ptrSF != NULL) {
+				afficher_rectangle((ptrSF->x_origine),(ptrSF->x_origine+ptrSF->composant1),(ptrSF->y_origine),(ptrSF->y_origine+ptrSF->composant2));
+				ptrSF = ptrSF->suivant;
+	}
 
-   headBackup = link;
 }
 
 void restaurer() {
 
-   struct nodeListeBackup *linkTemp = deleteFirstBackup();
-   inserer(linkTemp->indice, linkTemp->x_origine, linkTemp->y_origine, linkTemp->composant1, linkTemp->composant2, linkTemp->plein);
+	struct noeudListeBackup *lienTemp = deleteFirstBackup();
+	inserer(lienTemp->type, lienTemp->x_origine, lienTemp->y_origine, lienTemp->composant1, lienTemp->composant2, lienTemp->plein);
 }
-
-
-	
-  
-  
-
-

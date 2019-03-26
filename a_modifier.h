@@ -5,10 +5,11 @@
 
 int x;
 int y;
-int dernierClicX ;
-int dernierClicY ; 
-int xn;
-int yn;
+int x1 ; // Principalement pour les derniers clics
+int y1 ; // Principalement pour les derniers clics
+int x2; // Principalement pour l'avant dernier clic
+int y2; // Principalement pour l'avant dernier clic
+int temp;
 
 // Vous pouvez modifier ce fichier si vous voulez mais ce n'est pas forcément nécessaire
 
