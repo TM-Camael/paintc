@@ -1,6 +1,12 @@
 #include <math.h>
 #include "figure.h"
 
+void setColor(int r, int g, int b) {
+	red = r;
+	green = g;
+	blue = b;
+}
+
 void afficher_texte(int x_centre, int y_centre, char *string, double r, double v, double b){
 	glColor4f(r,v,b,1.0);
 	texte(x_centre, y_centre, string);
@@ -15,26 +21,24 @@ void afficher_point(int x_centre, int y_centre, double r, double v, double b)
 	glEnd();
 }
 
-int afficher_cercle(int x1, int x2, int y1, int y2)
+void afficher_cercle(int x1, int y1, int r)
 {
 	int x = 0;
 	int m;
-	double temp = (x2-x1)*(x2-x1)+(y1-y2)*(y1-y2);
-	y=sqrt(temp);
-	printf("%d %d %lf %d",x1, y1, temp, y);
-	
+	int y=r;
+
 	m= 5 - 4*y;
 
 	while(x<=y)
 	{
-	afficher_point((x+x1), (TAILLE_Y-(y+y1)), 0, 0, 0);
-	afficher_point((y+x1), (TAILLE_Y-(x+y1)), 0, 0, 0);
-	afficher_point((-x+x1), (TAILLE_Y-(y+y1)), 0, 0, 0);
-	afficher_point((-y+x1), (TAILLE_Y-(x+y1)), 0, 0, 0);
-	afficher_point((x+x1), (TAILLE_Y-(-y+y1)), 0, 0, 0);
-	afficher_point((y+x1), (TAILLE_Y-(-x+y1)), 0, 0, 0);
-	afficher_point((-x+x1), (TAILLE_Y-(-y+y1)), 0, 0, 0);
-	afficher_point((-y+x1), (TAILLE_Y-(-x+y1)), 0, 0, 0);
+	afficher_point((x+x1), (TAILLE_Y-(y+y1)), red, green, blue);
+	afficher_point((y+x1), (TAILLE_Y-(x+y1)), red, green, blue);
+	afficher_point((-x+x1), (TAILLE_Y-(y+y1)), red, green, blue);
+	afficher_point((-y+x1), (TAILLE_Y-(x+y1)), red, green, blue);
+	afficher_point((x+x1), (TAILLE_Y-(-y+y1)), red, green, blue);
+	afficher_point((y+x1), (TAILLE_Y-(-x+y1)), red, green, blue);
+	afficher_point((-x+x1), (TAILLE_Y-(-y+y1)), red, green, blue);
+	afficher_point((-y+x1), (TAILLE_Y-(-x+y1)), red, green, blue);
 	if(m>0) 
 	{
 		y--;
@@ -43,25 +47,21 @@ int afficher_cercle(int x1, int x2, int y1, int y2)
 	x++;
 	m+=8*x+4;
 	}
-	return y;
 }
 
-int afficher_cercle_plein(int x1, int x2, int y1, int y2)
+void afficher_cercle_plein(int x1, int y1, int r)
 {
-	int x, y, r;
-	double temp = (x2-x1)*(x2-x1)+(y1-y2)*(y1-y2);
-	r=sqrt(temp);
+	int x, y;
 	
 	for(y=-r; y<=r; y++)
 	{
 		for(x=-r; x<=r; x++) {
 			if(x*x+y*y <= r*r)
 			{
-				afficher_point(x1+x, (TAILLE_Y-y1+y), 0, 0, 0);
+				afficher_point(x1+x, (TAILLE_Y-y1+y), red, green, blue);
 			}
 		}
 	}
-	return r;
 }
 		
 void afficher_rectangle(int x1, int x2, int y1, int y2)
@@ -75,14 +75,14 @@ void afficher_rectangle(int x1, int x2, int y1, int y2)
 
 	for(i=0; i<=longueur; i++)
 	{
-		afficher_point(x1+i, (TAILLE_Y-y1), 0, 0, 0);
-		afficher_point(x1+i, (TAILLE_Y-(y1+largeur)), 0, 0, 0);
+		afficher_point(x1+i, (TAILLE_Y-y1), red, green, blue);
+		afficher_point(x1+i, (TAILLE_Y-(y1+largeur)), red, green, blue);
 	}
 
 	for(i=0; i<=largeur; i++)
 	{
-		afficher_point(x1, (TAILLE_Y-(y1+i)), 0, 0, 0);
-		afficher_point(x1+longueur, (TAILLE_Y-(y1+i)), 0, 0, 0);
+		afficher_point(x1, (TAILLE_Y-(y1+i)), red, green, blue);
+		afficher_point(x1+longueur, (TAILLE_Y-(y1+i)), red, green, blue);
 	}
 }
 
@@ -97,7 +97,7 @@ void afficher_rectangle_plein(int x1, int x2, int y1, int y2) {
 	for(j=0; j<=largeur; j++){
 		for(i=0; i<=longueur; i++)
 		{
-			afficher_point((x1+i), (TAILLE_Y-(y1+j)), 0, 0, 0);
+			afficher_point((x1+i), (TAILLE_Y-(y1+j)), red, green, blue);
 		}
 	}
 }
@@ -118,7 +118,7 @@ int afficher_droite(int x1, int x2, int y1, int y2) {
 	int err = (dx>dy ? dx : -dy)/2, e2;
  
 	for(;;){
-		afficher_point(x1, y1, 0, 0, 0);
+		afficher_point(x1, y1, red, green, blue);
 		if (x1==x2 && y1==y2) break;
 		e2 = err;
 		if (e2 >-dx) { err -= dy; x1 += sx; }
@@ -236,8 +236,24 @@ void supprimerLien() {
 void supprimerFigure() {
 	effacer();
 	struct noeudListe *ptrSF = tete;
-	while(ptrSF != NULL) {
+	while(ptrSF != NULL) 
+	{
+				if(ptrSF->type == 2 && ptrSF->plein == 0){
 				afficher_rectangle((ptrSF->x_origine),(ptrSF->x_origine+ptrSF->composant1),(ptrSF->y_origine),(ptrSF->y_origine+ptrSF->composant2));
+				}
+
+				if(ptrSF->type == 2 && ptrSF->plein == 1){
+				afficher_rectangle_plein((ptrSF->x_origine),(ptrSF->x_origine+ptrSF->composant1),(ptrSF->y_origine),(ptrSF->y_origine+ptrSF->composant2));
+				}
+
+				if(ptrSF->type == 3 && ptrSF->plein == 0){
+				afficher_cercle((ptrSF->x_origine), (ptrSF->y_origine),(ptrSF->composant1));
+				}
+
+				if(ptrSF->type == 3 && ptrSF->plein == 1){
+				afficher_cercle_plein((ptrSF->x_origine),(ptrSF->y_origine),(ptrSF->composant1));
+				}
+				
 				ptrSF = ptrSF->suivant;
 	}
 
@@ -246,5 +262,20 @@ void supprimerFigure() {
 void restaurer() {
 
 	struct noeudListeBackup *lienTemp = deleteFirstBackup();
-	inserer(lienTemp->type, lienTemp->x_origine, lienTemp->y_origine, lienTemp->composant1, lienTemp->composant2, lienTemp->plein);
+		if(lienTemp->type == 2 && lienTemp->plein == 0){
+			afficher_rectangle((lienTemp->x_origine),(lienTemp->x_origine+lienTemp->composant1),(lienTemp->y_origine),(lienTemp->y_origine+lienTemp->composant2));
+		}
+
+		if(lienTemp->type == 2 && lienTemp->plein == 1){
+			afficher_rectangle_plein((lienTemp->x_origine),(lienTemp->x_origine+lienTemp->composant1),(lienTemp->y_origine),(lienTemp->y_origine+lienTemp->composant2));
+		}
+
+		if(lienTemp->type == 3 && lienTemp->plein == 0){
+			afficher_cercle((lienTemp->x_origine), (lienTemp->y_origine),(lienTemp->composant1));
+		}
+
+		if(lienTemp->type == 3 && lienTemp->plein == 1){
+			afficher_cercle_plein((lienTemp->x_origine),(lienTemp->y_origine),(lienTemp->composant1));
+		}
+		inserer(lienTemp->type, lienTemp->x_origine, lienTemp->y_origine, lienTemp->composant1, lienTemp->composant2, lienTemp->plein);
 }
