@@ -16,13 +16,13 @@ void afficher_texte(int x, int y, char *string, double r, double v, double b);
 
 void afficher_point(int x, int y, double r, double v, double b);
 
-void afficher_cercle(int x1, int y1, int rayon, double r, double g, double b);        
+void afficher_cercle(int x1, int y1, int rayon, double r, double g, double b, int init);        
 
-void afficher_cercle_plein(int x1, int y1, int rayon, double r, double g, double b);
+void afficher_cercle_plein(int x1, int y1, int rayon, double r, double g, double b, int init);
 
-void afficher_rectangle(int x1, int x2, int y1, int y2, double r, double g, double b);
+void afficher_rectangle(int x1, int x2, int y1, int y2, double r, double g, double b, int init);
 
-void afficher_rectangle_plein(int x1, int x2, int y1, int y2, double r, double g, double b);
+void afficher_rectangle_plein(int x1, int x2, int y1, int y2, double r, double g, double b, int init);
 
 void afficher_droite(double coef, int ordO, double r, double g, double b);
 
@@ -32,5 +32,7 @@ void inserer(int type, int x_origine, int y_origine, double composant1, double c
 void supprimerLien();
 void supprimerFigure();
 void restaurer();
+void sauvegarder_fichier();
+void ouvrir_fichier();
 
 #endif

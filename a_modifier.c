@@ -22,14 +22,22 @@ void initialisation_IG(){
 	for(temp=0; temp<TAILLE_X;temp++){
 		afficher_point(temp, 500, 0, 0, 0);
 	}
-	afficher_rectangle(50, 75, 10, 60, 0, 0, 0);
-	afficher_rectangle(100, 125, 10, 60, 0, 0, 0);
-	afficher_rectangle_plein(130, 155, 10, 60, 0, 0, 0);
-	afficher_cercle(185, 35, 25, 0, 0, 0);
-	afficher_cercle_plein(240, 35, 25, 0, 0, 0);
-	afficher_rectangle_plein(500, 525, 50, 75, 1, 0, 0);
-	afficher_rectangle_plein(530, 555, 50, 75, 0, 1, 0);
-	afficher_rectangle_plein(560, 585, 50, 75, 0, 0, 1);
+	afficher_cercle_plein(55,35,15,0,0,0,1);
+	for(temp=0; temp<50;temp++){
+		afficher_point(85, TAILLE_Y-10-temp, 0, 0, 0);
+	}
+	afficher_rectangle(100, 125, 10, 60, 0, 0, 0, 1);
+	afficher_rectangle_plein(130, 155, 10, 60, 0, 0, 0, 1);
+	afficher_cercle(185, 35, 25, 0, 0, 0, 1);
+	afficher_cercle_plein(240, 35, 25, 0, 0, 0, 1);
+	afficher_rectangle_plein(500, 525, 10, 35, 1, 0, 0, 1);
+	afficher_rectangle_plein(530, 555, 10, 35, 0, 1, 0, 1);
+	afficher_rectangle_plein(560, 585, 10, 35, 0, 0, 1, 1);
+	afficher_rectangle_plein(500, 525, 35, 60, 1, 0, 1, 1);
+	afficher_rectangle_plein(530, 555, 35, 60, 1, 1, 0, 1);
+	afficher_rectangle_plein(560, 585, 35, 60, 0, 1, 1, 1);
+	afficher_rectangle_plein(590, 615, 10, 35, 0.5, 0.5, 0.5, 1);
+	afficher_rectangle_plein(590, 615, 35, 60, 0, 0, 0, 1);
 }
 
 void setColor(double r, double g, double b) {
@@ -57,27 +65,25 @@ void affichage()
 	{
 		dx = x1-x2;
 		test = ((TAILLE_Y-y1)-(TAILLE_Y-y2))/dx;
-		printf("Coef dir : %lf", test);
 		afficher_droite(test, (TAILLE_Y-y2-test*x2), red, green, blue);
 		inserer(DROITE, 0, 0, test, (TAILLE_Y-y2-test*x2), red, green, blue, 0);
-		choix=-1;
+		compteurClic=0;
 	}
 
 	if(choix==2 && compteurClic == 2)
 	{
 		temp = sqrt((x2-x1)*(x2-x1)+(y1-y2)*(y1-y2));
-		afficher_cercle(x2, y2, temp, red, green, blue);
+		afficher_cercle(x2, y2, temp, red, green, blue, 0);
 		inserer(CERCLE, x2, y2, temp, 0, red, green, blue, 0);
-		choix=-1;
+		compteurClic=0;
 	}
 
 	if(choix==3 && compteurClic == 2) 
 	{
 		temp = sqrt((x2-x1)*(x2-x1)+(y1-y2)*(y1-y2));
-		afficher_cercle_plein(x2,y2, temp, red, green, blue);
+		afficher_cercle_plein(x2,y2, temp, red, green, blue, 0);
 		inserer(CERCLE, x2, y2, temp, 0, red, green, blue, 1);
-		choix =-1;
-		compteurClic = 0;
+		compteurClic=0;
 	}
 
 	if(choix==4 && compteurClic == 2)
@@ -95,9 +101,9 @@ void affichage()
 			y2 = y1;
 			y1 = temp;
 		}
-		afficher_rectangle(x1, x2, y1, y2, red, green, blue);
+		afficher_rectangle(x1, x2, y1, y2, red, green, blue, 0);
 		inserer(RECTANGLE, x1, y1, abs(x1-x2), abs(y2-y1), red, green, blue, 0);
-		choix=-1;
+		compteurClic=0;
 	}
 
 	if(choix==5 && compteurClic == 2)
@@ -114,19 +120,18 @@ void affichage()
 		y2 = y1;
 		y1 = temp;
 	}
-		afficher_rectangle_plein(x1, x2, y1, y2, red, green, blue);
+		afficher_rectangle_plein(x1, x2, y1, y2, red, green, blue, 0);
 		inserer(RECTANGLE, x1, y1, abs(x1-x2), abs(y2-y1), red, green, blue, 1);
 		compteurClic = 0;
-		choix=-1;
 	}
 
-	if(choix==6){
-		printf("Entrez la coordonnées X du point à afficher :\n");
-		scanf(" %d",&x);
-		printf("Entrez la coordonnées Y du point à afficher :\n");
-		scanf(" %d",&y);
-		afficher_point(x,y,0,0,0);
-		choix=-1;
+	if(choix==6 && compteurClic == 1 && y1 < 500){
+		afficher_point(x1,TAILLE_Y-y1,red, green, blue);
+		afficher_point(x1+1,TAILLE_Y-y1,red, green, blue);
+		afficher_point(x1,TAILLE_Y-y1-1,red, green, blue);
+		afficher_point(x1+1,TAILLE_Y-y1-1,red, green, blue);
+		inserer(POINT, x1, y1, 0, 0, red, green, blue, 0);
+		compteurClic=0;
 	}
 
 	if(choix=='7'){
@@ -159,7 +164,25 @@ void affichage()
 		choix=-1;
 	}
 
-	if((x1>50 && x1 < 75) && (y1>10 && y1<60)){
+	if(choix=='s')
+	{
+		sauvegarder_fichier();
+		choix=-1;
+	}
+
+	if(choix=='o')
+	{
+		ouvrir_fichier();
+		choix=-1;
+	}
+
+	/* Choix des figures */
+	if((x1>40 && x1 < 70) && (y1>10 && y1<60)){
+		compteurClic = 0;
+		choix = 6;
+	}
+
+	if((x1>75 && x1 < 95) && (y1>10 && y1<60)){
 		compteurClic = 0;
 		choix = 1;
 	}
@@ -184,17 +207,46 @@ void affichage()
 		choix = 3;
 	}
 
-	if((x1>500 && x1<525) && (y1>50 && y1<75)){
+	/* Choix des couleurs */
+	if((x1>500 && x1<525) && (y1>10 && y1<35)){
 		setColor(1, 0, 0);
+		compteurClic = 0;
 	}
 
-	if((x1>530 && x1<555) && (y1>50 && y1<75)){
+	if((x1>530 && x1<555) && (y1>10 && y1<35)){
 		setColor(0, 1, 0);
+		compteurClic = 0;
 	}
 
-	if((x1>560 && x1<585) && (y1>50 && y1<75)){
+	if((x1>560 && x1<585) && (y1>10 && y1<35)){
 		setColor(0, 0, 1);
+		compteurClic = 0;
 	}
+
+	if((x1>500 && x1<525) && (y1>35 && y1<60)){
+		setColor(1, 0, 1);
+		compteurClic = 0;
+	}
+
+	if((x1>530 && x1<555) && (y1>35 && y1<60)){
+		setColor(1, 1, 0);
+		compteurClic = 0;
+	}
+
+	if((x1>560 && x1<585) && (y1>35 && y1<60)){
+		setColor(0, 1, 1);
+		compteurClic = 0;
+	}
+	if((x1>590 && x1<615) && (y1>10 && y1<35)){
+		setColor(0.5, 0.5, 0.5);
+		compteurClic = 0;
+	}
+
+	if((x1>590 && x1<615) && (y1>35 && y1<60)){
+		setColor(0, 0, 0);
+		compteurClic = 0;
+	}
+
 }
 
 void clic_gauche(int x, int y){
@@ -234,4 +286,6 @@ void clavier(unsigned char key, int x, int y){
 	if(key=='9')
 	exit(0);
 }
+
+
 
