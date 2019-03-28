@@ -1,11 +1,4 @@
-#include <math.h>
 #include "figure.h"
-
-void setColor(int r, int g, int b) {
-	red = r;
-	green = g;
-	blue = b;
-}
 
 void afficher_texte(int x_centre, int y_centre, char *string, double r, double v, double b){
 	glColor4f(r,v,b,1.0);
@@ -21,24 +14,25 @@ void afficher_point(int x_centre, int y_centre, double r, double v, double b)
 	glEnd();
 }
 
-void afficher_cercle(int x1, int y1, int r)
+/*Gestion du cercle */
+void afficher_cercle(int x1, int y1, int rayon, double r, double g, double b)
 {
 	int x = 0;
 	int m;
-	int y=r;
+	int y=rayon;
 
 	m= 5 - 4*y;
 
 	while(x<=y)
 	{
-	afficher_point((x+x1), (TAILLE_Y-(y+y1)), red, green, blue);
-	afficher_point((y+x1), (TAILLE_Y-(x+y1)), red, green, blue);
-	afficher_point((-x+x1), (TAILLE_Y-(y+y1)), red, green, blue);
-	afficher_point((-y+x1), (TAILLE_Y-(x+y1)), red, green, blue);
-	afficher_point((x+x1), (TAILLE_Y-(-y+y1)), red, green, blue);
-	afficher_point((y+x1), (TAILLE_Y-(-x+y1)), red, green, blue);
-	afficher_point((-x+x1), (TAILLE_Y-(-y+y1)), red, green, blue);
-	afficher_point((-y+x1), (TAILLE_Y-(-x+y1)), red, green, blue);
+	afficher_point((x+x1), (TAILLE_Y-(y+y1)), r, g , b);
+	afficher_point((y+x1), (TAILLE_Y-(x+y1)), r, g , b);
+	afficher_point((-x+x1), (TAILLE_Y-(y+y1)), r, g , b);
+	afficher_point((-y+x1), (TAILLE_Y-(x+y1)), r, g , b);
+	afficher_point((x+x1), (TAILLE_Y-(-y+y1)), r, g , b);
+	afficher_point((y+x1), (TAILLE_Y-(-x+y1)), r, g , b);
+	afficher_point((-x+x1), (TAILLE_Y-(-y+y1)), r, g , b);
+	afficher_point((-y+x1), (TAILLE_Y-(-x+y1)), r, g , b);
 	if(m>0) 
 	{
 		y--;
@@ -49,22 +43,23 @@ void afficher_cercle(int x1, int y1, int r)
 	}
 }
 
-void afficher_cercle_plein(int x1, int y1, int r)
+void afficher_cercle_plein(int x1, int y1, int rayon, double r, double g, double b)
 {
 	int x, y;
 	
-	for(y=-r; y<=r; y++)
+	for(y=-rayon; y<=rayon; y++)
 	{
-		for(x=-r; x<=r; x++) {
-			if(x*x+y*y <= r*r)
+		for(x=-rayon; x<=rayon; x++) {
+			if(x*x+y*y <= rayon*rayon)
 			{
-				afficher_point(x1+x, (TAILLE_Y-y1+y), red, green, blue);
+				afficher_point(x1+x, (TAILLE_Y-y1+y), r, g, b);
 			}
 		}
 	}
 }
-		
-void afficher_rectangle(int x1, int x2, int y1, int y2)
+	
+/* Gestion du rectangle */
+void afficher_rectangle(int x1, int x2, int y1, int y2, double r, double g, double b)
 {
 	int longueur;
 	int largeur;
@@ -75,18 +70,18 @@ void afficher_rectangle(int x1, int x2, int y1, int y2)
 
 	for(i=0; i<=longueur; i++)
 	{
-		afficher_point(x1+i, (TAILLE_Y-y1), red, green, blue);
-		afficher_point(x1+i, (TAILLE_Y-(y1+largeur)), red, green, blue);
+		afficher_point(x1+i, (TAILLE_Y-y1), r, g, b);
+		afficher_point(x1+i, (TAILLE_Y-(y1+largeur)), r, g, b);
 	}
 
 	for(i=0; i<=largeur; i++)
 	{
-		afficher_point(x1, (TAILLE_Y-(y1+i)), red, green, blue);
-		afficher_point(x1+longueur, (TAILLE_Y-(y1+i)), red, green, blue);
+		afficher_point(x1, (TAILLE_Y-(y1+i)), r, g, b);
+		afficher_point(x1+longueur, (TAILLE_Y-(y1+i)), r, g, b);
 	}
 }
 
-void afficher_rectangle_plein(int x1, int x2, int y1, int y2) {
+void afficher_rectangle_plein(int x1, int x2, int y1, int y2, double r, double g, double b) {
 	int longueur;
 	int largeur;
 	int i, j;
@@ -97,35 +92,36 @@ void afficher_rectangle_plein(int x1, int x2, int y1, int y2) {
 	for(j=0; j<=largeur; j++){
 		for(i=0; i<=longueur; i++)
 		{
-			afficher_point((x1+i), (TAILLE_Y-(y1+j)), red, green, blue);
+			afficher_point((x1+i), (TAILLE_Y-(y1+j)), r, g, b);
 		}
 	}
 }
 
-int afficher_droite(int x1, int x2, int y1, int y2) {
-
-	double temp = (TAILLE_Y-y1-y2)/(x2-x1);
-	int a = (int)temp;
-	int b = y1-a*x1;
-	
-	x1=0;
-	y1=b;
-	x2=TAILLE_X+1;
-	y2=x2*temp+b;
-
-	int dx = abs(x2-x1), sx = x1<x2 ? 1 : -1;
-	int dy = abs(y2-y1), sy = y1<y2 ? 1 : -1; 
-	int err = (dx>dy ? dx : -dy)/2, e2;
+/* Gestion de la droite */ 
+void afficher_droite(double coef, int ordO, double r, double g, double b) {
  
-	for(;;){
-		afficher_point(x1, y1, red, green, blue);
-		if (x1==x2 && y1==y2) break;
-		e2 = err;
-		if (e2 >-dx) { err -= dy; x1 += sx; }
-		if (e2 < dy) { err += dx; y1 += sy; }
+  int x1, x2, y1, y2;
+  
+  x1=0;
+  y1=ordO;
+  x2=TAILLE_X;
+  y2=TAILLE_X*coef+ordO;
+
+  int dx = abs(x2-x1), sx = x1<x2 ? 1 : -1;
+  int dy = abs(y2-y1), sy = y1<y2 ? 1 : -1; 
+  int err = (dx>dy ? dx : -dy)/2, e2;
+ 
+  for(;;){
+	if(y1<500){
+    afficher_point(x1, y1, r, g, b);
 	}
-	return a;
+    if ((x1==x2 && y1==y2)) break;
+    e2 = err;
+    if (e2 >-dx) { err -= dy; x1 += sx; }
+    if (e2 < dy) { err += dx; y1 += sy; }
+  }
 }
+
 
 /****************************************************************************************************************************/
 /****************************************************************************************************************************/
@@ -136,8 +132,11 @@ struct noeudListe {
 	int type; /* Compris entre 1 et 4, respectivement Point, Droite, Carré, Cercle */
 	int x_origine; 
 	int y_origine;
-	int composant1; /* Fait référence au coefficiant directeur d'une droite, ou de la longueur d'un rectangle, ou du rayon d'un cercle */
-	int composant2; /* Fait référence à l'ordonnée à l'origine d'une droite, ou de la largeur d'un rectangle */
+	double composant1; /* Fait référence au coefficiant directeur d'une droite, ou de la longueur d'un rectangle, ou du rayon d'un cercle */
+	double composant2; /* Fait référence à l'ordonnée à l'origine d'une droite, ou de la largeur d'un rectangle */
+	double couleurRouge;
+	double couleurVerte;
+	double couleurBleu;
 	int plein;
 	struct noeudListe *suivant;
 };
@@ -157,8 +156,11 @@ struct noeudListeBackup {
 	int type;
 	int x_origine;
 	int y_origine;
-	int composant1;
-	int composant2; 
+	double composant1;
+	double composant2;
+	double couleurRouge;
+	double couleurVerte;
+	double couleurBleu; 
 	int plein;
 	struct noeudListeBackup *suivant;
 };
@@ -185,15 +187,15 @@ void afficherListe() {
 				break;
 		
 			case 1:
-				printf("Droite :\ncoeffDirec : %d\nordOrigine : %d\n\n",ptr->composant1,ptr->composant2);
+				printf("Droite :\ncoeffDirec : %f\nordOrigine : %f\n\n",ptr->composant1,ptr->composant2);
 				break;
 			
 			case 2: 
-				printf("Rectangle -\nOrigine : (%d,%d)\nLongueur : %d\nLargeur : %d\nPlein : %d\n\n",ptr->x_origine,ptr->y_origine,ptr->composant1,ptr->composant2,ptr->plein);
+				printf("Rectangle -\nOrigine : (%d,%d)\nLongueur : %f\nLargeur : %f\nPlein : %d\n\n",ptr->x_origine,ptr->y_origine,ptr->composant1,ptr->composant2,ptr->plein);
 				break;
 			
 			case 3: 
-				printf("Cercle -\nCentre : (%d,%d)\nRayon : %d\nPlein : %d\n\n",ptr->x_origine,ptr->y_origine,ptr->composant1,ptr->plein);
+				printf("Cercle -\nCentre : (%d,%d)\nRayon : %f\nPlein : %d\n\n",ptr->x_origine,ptr->y_origine,ptr->composant1,ptr->plein);
 				break;
 
 			default:
@@ -204,7 +206,7 @@ void afficherListe() {
 }
 
 
-void inserer(int type, int x_origine, int y_origine, int composant1, int composant2, int plein) {
+void inserer(int type, int x_origine, int y_origine, double composant1, double composant2, double r, double g, double b, int plein) {
 
 	struct noeudListe *lien = (struct noeudListe*) malloc(sizeof(struct noeudListe));
 	
@@ -213,6 +215,9 @@ void inserer(int type, int x_origine, int y_origine, int composant1, int composa
 	lien->y_origine = y_origine;
 	lien->composant1 = composant1;
 	lien->composant2 = composant2;
+	lien->couleurRouge = r;
+	lien->couleurVerte = g;
+	lien->couleurBleu = b;
 	lien->plein = plein;
 	lien->suivant = tete;
 	tete = lien;
@@ -228,6 +233,9 @@ void supprimerLien() {
 	lien->y_origine = lienTemp->y_origine;
 	lien->composant1 = lienTemp->composant1;
 	lien->composant2 = lienTemp->composant2;
+	lien->couleurRouge = lienTemp->couleurRouge;
+	lien->couleurVerte = lienTemp->couleurVerte;
+	lien->couleurBleu = lienTemp->couleurBleu;
 	lien->plein = lienTemp->plein;
 	lien->suivant = teteBackup;
 	teteBackup = lien;
@@ -238,20 +246,23 @@ void supprimerFigure() {
 	struct noeudListe *ptrSF = tete;
 	while(ptrSF != NULL) 
 	{
+				if(ptrSF->type == DROITE){
+					afficher_droite(ptrSF->composant1, ptrSF->composant2, ptrSF->couleurRouge, ptrSF->couleurVerte, ptrSF->couleurBleu);
+				}
 				if(ptrSF->type == 2 && ptrSF->plein == 0){
-				afficher_rectangle((ptrSF->x_origine),(ptrSF->x_origine+ptrSF->composant1),(ptrSF->y_origine),(ptrSF->y_origine+ptrSF->composant2));
+				afficher_rectangle((ptrSF->x_origine),(ptrSF->x_origine+ptrSF->composant1),(ptrSF->y_origine),(ptrSF->y_origine+ptrSF->composant2), ptrSF->couleurRouge, ptrSF->couleurVerte, ptrSF->couleurBleu);
 				}
 
 				if(ptrSF->type == 2 && ptrSF->plein == 1){
-				afficher_rectangle_plein((ptrSF->x_origine),(ptrSF->x_origine+ptrSF->composant1),(ptrSF->y_origine),(ptrSF->y_origine+ptrSF->composant2));
+				afficher_rectangle_plein((ptrSF->x_origine),(ptrSF->x_origine+ptrSF->composant1),(ptrSF->y_origine),(ptrSF->y_origine+ptrSF->composant2), ptrSF->couleurRouge, ptrSF->couleurVerte, ptrSF->couleurBleu);
 				}
 
 				if(ptrSF->type == 3 && ptrSF->plein == 0){
-				afficher_cercle((ptrSF->x_origine), (ptrSF->y_origine),(ptrSF->composant1));
+				afficher_cercle((ptrSF->x_origine), (ptrSF->y_origine),(ptrSF->composant1), ptrSF->couleurRouge, ptrSF->couleurVerte, ptrSF->couleurBleu);
 				}
 
 				if(ptrSF->type == 3 && ptrSF->plein == 1){
-				afficher_cercle_plein((ptrSF->x_origine),(ptrSF->y_origine),(ptrSF->composant1));
+				afficher_cercle_plein((ptrSF->x_origine),(ptrSF->y_origine),(ptrSF->composant1), ptrSF->couleurRouge, ptrSF->couleurVerte, ptrSF->couleurBleu);
 				}
 				
 				ptrSF = ptrSF->suivant;
@@ -262,20 +273,24 @@ void supprimerFigure() {
 void restaurer() {
 
 	struct noeudListeBackup *lienTemp = deleteFirstBackup();
+
+		if(lienTemp->type == DROITE){
+			afficher_droite(lienTemp->composant1, lienTemp->composant2, lienTemp->couleurRouge, lienTemp->couleurVerte, lienTemp->couleurBleu);
+		}
 		if(lienTemp->type == 2 && lienTemp->plein == 0){
-			afficher_rectangle((lienTemp->x_origine),(lienTemp->x_origine+lienTemp->composant1),(lienTemp->y_origine),(lienTemp->y_origine+lienTemp->composant2));
+			afficher_rectangle((lienTemp->x_origine),(lienTemp->x_origine+lienTemp->composant1),(lienTemp->y_origine),(lienTemp->y_origine+lienTemp->composant2), lienTemp->couleurRouge, lienTemp->couleurVerte, lienTemp->couleurBleu);
 		}
 
 		if(lienTemp->type == 2 && lienTemp->plein == 1){
-			afficher_rectangle_plein((lienTemp->x_origine),(lienTemp->x_origine+lienTemp->composant1),(lienTemp->y_origine),(lienTemp->y_origine+lienTemp->composant2));
+			afficher_rectangle_plein((lienTemp->x_origine),(lienTemp->x_origine+lienTemp->composant1),(lienTemp->y_origine),(lienTemp->y_origine+lienTemp->composant2), lienTemp->couleurRouge, lienTemp->couleurVerte, lienTemp->couleurBleu);
 		}
 
 		if(lienTemp->type == 3 && lienTemp->plein == 0){
-			afficher_cercle((lienTemp->x_origine), (lienTemp->y_origine),(lienTemp->composant1));
+			afficher_cercle((lienTemp->x_origine), (lienTemp->y_origine),(lienTemp->composant1), lienTemp->couleurRouge, lienTemp->couleurVerte, lienTemp->couleurBleu);
 		}
 
 		if(lienTemp->type == 3 && lienTemp->plein == 1){
-			afficher_cercle_plein((lienTemp->x_origine),(lienTemp->y_origine),(lienTemp->composant1));
+			afficher_cercle_plein((lienTemp->x_origine),(lienTemp->y_origine),(lienTemp->composant1), lienTemp->couleurRouge, lienTemp->couleurVerte, lienTemp->couleurBleu);
 		}
-		inserer(lienTemp->type, lienTemp->x_origine, lienTemp->y_origine, lienTemp->composant1, lienTemp->composant2, lienTemp->plein);
+		inserer(lienTemp->type, lienTemp->x_origine, lienTemp->y_origine, lienTemp->composant1, lienTemp->composant2, lienTemp->couleurRouge, lienTemp->couleurVerte, lienTemp->couleurBleu, lienTemp->plein);
 }

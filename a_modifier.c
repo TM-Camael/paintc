@@ -5,6 +5,8 @@
 
 int choix=-1;
 int compteurClic = 0;
+double test;
+double dx;
 
 // Procédure appelée lors de la création de la fenêtre
 // que vous pouvez réappeler de nouveau pour réinitilisation.
@@ -17,19 +19,25 @@ void initialisation_fenetre(){
 }
 
 void initialisation_IG(){
-	afficher_rectangle(100, 125, 100, 50);
-	afficher_rectangle_plein(130, 155, 100, 50);
-	afficher_cercle(185, 125, 25);
-	afficher_cercle_plein(240, 125, 25);
-	setColor(1, 0, 0);
-	afficher_rectangle_plein(500, 525, 50, 75);
-	setColor(0, 1, 0);
-	afficher_rectangle_plein(530, 555, 50, 75);
-	setColor(0, 0, 1);
-	afficher_rectangle_plein(560, 585, 50, 75);
-	setColor(0, 0, 0);
+	for(temp=0; temp<TAILLE_X;temp++){
+		afficher_point(temp, 500, 0, 0, 0);
+	}
+	afficher_rectangle(50, 75, 10, 60, 0, 0, 0);
+	afficher_rectangle(100, 125, 10, 60, 0, 0, 0);
+	afficher_rectangle_plein(130, 155, 10, 60, 0, 0, 0);
+	afficher_cercle(185, 35, 25, 0, 0, 0);
+	afficher_cercle_plein(240, 35, 25, 0, 0, 0);
+	afficher_rectangle_plein(500, 525, 50, 75, 1, 0, 0);
+	afficher_rectangle_plein(530, 555, 50, 75, 0, 1, 0);
+	afficher_rectangle_plein(560, 585, 50, 75, 0, 0, 1);
 }
 
+void setColor(double r, double g, double b) {
+	red = r;
+	green = g;
+	blue = b;
+}
+ 
 // Cette procédure est appelée lorsqu'aucun
 // événement clavier/souris n'est détecté
 // donc quasiment en continu.
@@ -45,26 +53,29 @@ void affichage()
 	// visible qu'un seul pixel - juste plus de confort
 	// pour ce programme de test.
 
-	if(choix==1)
+	if(choix==1 && compteurClic==2)
 	{
-		temp = afficher_droite(x2, x1, y2, y1);
-		inserer(DROITE, x2, y2, temp, (y2-temp*x2), 0);
+		dx = x1-x2;
+		test = ((TAILLE_Y-y1)-(TAILLE_Y-y2))/dx;
+		printf("Coef dir : %lf", test);
+		afficher_droite(test, (TAILLE_Y-y2-test*x2), red, green, blue);
+		inserer(DROITE, 0, 0, test, (TAILLE_Y-y2-test*x2), red, green, blue, 0);
 		choix=-1;
 	}
 
 	if(choix==2 && compteurClic == 2)
 	{
 		temp = sqrt((x2-x1)*(x2-x1)+(y1-y2)*(y1-y2));
-		afficher_cercle(x2, y2, temp);
-		inserer(CERCLE, x2, y2, temp, 0, 0);
+		afficher_cercle(x2, y2, temp, red, green, blue);
+		inserer(CERCLE, x2, y2, temp, 0, red, green, blue, 0);
 		choix=-1;
 	}
 
 	if(choix==3 && compteurClic == 2) 
 	{
 		temp = sqrt((x2-x1)*(x2-x1)+(y1-y2)*(y1-y2));
-		afficher_cercle_plein(x2,y2,temp);
-		inserer(CERCLE, x2, y2, temp, 0, 1);
+		afficher_cercle_plein(x2,y2, temp, red, green, blue);
+		inserer(CERCLE, x2, y2, temp, 0, red, green, blue, 1);
 		choix =-1;
 		compteurClic = 0;
 	}
@@ -84,8 +95,8 @@ void affichage()
 			y2 = y1;
 			y1 = temp;
 		}
-		afficher_rectangle(x1, x2, y1, y2);
-		inserer(RECTANGLE, x1, y1, abs(x1-x2), abs(y2-y1), 0);
+		afficher_rectangle(x1, x2, y1, y2, red, green, blue);
+		inserer(RECTANGLE, x1, y1, abs(x1-x2), abs(y2-y1), red, green, blue, 0);
 		choix=-1;
 	}
 
@@ -103,8 +114,8 @@ void affichage()
 		y2 = y1;
 		y1 = temp;
 	}
-		afficher_rectangle_plein(x1, x2, y1, y2);
-		inserer(RECTANGLE, x1, y1, abs(x1-x2), abs(y2-y1), 1);
+		afficher_rectangle_plein(x1, x2, y1, y2, red, green, blue);
+		inserer(RECTANGLE, x1, y1, abs(x1-x2), abs(y2-y1), red, green, blue, 1);
 		compteurClic = 0;
 		choix=-1;
 	}
@@ -148,22 +159,27 @@ void affichage()
 		choix=-1;
 	}
 
-	if((x1>100 && x1 < 125) && (y1>100 && y1<150)){
+	if((x1>50 && x1 < 75) && (y1>10 && y1<60)){
+		compteurClic = 0;
+		choix = 1;
+	}
+
+	if((x1>100 && x1 < 125) && (y1>10 && y1<60)){
 		compteurClic = 0;
 		choix = 4;
 	}
 
-	if((x1>130 && x1 < 155) && (y1>100 && y1<150)){
+	if((x1>130 && x1 < 155) && (y1>10 && y1<60)){
 		compteurClic = 0;
 		choix = 5;
 	}
 
-	if((x1>160 && x1 < 210) && (y1>100 && y1<150)){
+	if((x1>160 && x1 < 210) && (y1>10 && y1<60)){
 		compteurClic = 0;
 		choix = 2;
 	}
 
-	if((x1>215 && x1 < 265) && (y1>100 && y1<150)){
+	if((x1>215 && x1 < 265) && (y1>10 && y1<60)){
 		compteurClic = 0;
 		choix = 3;
 	}
