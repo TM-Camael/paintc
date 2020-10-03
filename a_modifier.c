@@ -12,11 +12,6 @@ double dx;
 // que vous pouvez réappeler de nouveau pour réinitilisation.
 // Utile si vous voulez créer un menu ou une interface graphique...
 
-void initialisation_fenetre(){
-	effacer();
-	initialisation_IG();
-	
-}
 
 void initialisation_IG(){
 	for(temp=0; temp<TAILLE_X;temp++){
